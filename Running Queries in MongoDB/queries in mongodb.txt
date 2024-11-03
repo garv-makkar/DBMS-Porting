@@ -1,0 +1,122 @@
+Query 1
+db.students.find(
+    { "enrolled_courses": 15 },
+    { "student_name": 1, "student_email": 1 }
+)
+
+
+Query 2
+db.courses.aggregate([
+    { "$match": { "instructor_id": 2 } },  
+    { "$lookup": {                      
+        "from": "students",
+        "localField": "_id",
+        "foreignField": "enrolled_courses",
+        "as": "enrolled_students"
+    }},
+    { "$project": {
+        "course_code": 1,
+        "num_students": { "$size": "$enrolled_students" }
+    }},
+    { "$group": {
+        "_id": null,
+        "average_students": { "$avg": "$num_students" }
+    }}
+])
+
+
+Query 3
+db.courses.aggregate([
+    { "$match": { "department_id": 1 } }, 
+    { "$group": {
+        "_id": "$course_code",  
+        "department_id": { "$first": "$department_id" },  
+        "is_core_course": { "$first": "$is_core_course" } 
+    }},
+    { "$project": {
+        "_id": 0,
+        "course_code": "$_id", 
+        "department_id": 1,
+        "is_core_course": 1
+    }}
+])
+
+
+Query 4
+db.students.aggregate([
+    { "$group": {
+        "_id": "$department_id",
+        "total_students": { "$sum": 1 }
+    }},
+    { "$lookup": {
+        "from": "departments",
+        "localField": "_id",
+        "foreignField": "_id",
+        "as": "department_info"
+    }},
+    { "$unwind": "$department_info" },
+    { "$project": {
+        "_id": 0,
+        "department_name": "$department_info.department_name",
+        "total_students": 1
+    }}
+])
+
+
+Query 5
+db.instructors.aggregate([
+    { "$lookup": {                       
+        "from": "courses",
+        "localField": "_id",
+        "foreignField": "instructor_id",
+        "as": "taught_courses"
+    }},
+    { "$match": {                        
+        "taught_courses.department_id": 1,
+        "taught_courses.is_core_course": true
+    }},
+    { "$project": {                       
+        "instructor_name": 1,
+        "taught_course_ids": "$taught_courses._id"
+    }},
+    { "$lookup": {                       
+        "from": "courses",
+        "let": { "instructor_id": "$_id" },
+        "pipeline": [
+            { "$match": {
+                "$expr": {
+                    "$and": [
+                        { "$eq": ["$department_id", 1] },
+                        { "$eq": ["$is_core_course", true] }
+                    ]
+                }
+            }}
+        ],
+        "as": "all_core_courses"
+    }},
+    { "$addFields": {                     
+        "taught_all_core": {
+            "$setIsSubset": [
+                "$all_core_courses._id", "$taught_course_ids"
+            ]
+        }
+    }},
+    { "$match": { "taught_all_core": true } }
+])
+
+
+Query 6
+db.courses.aggregate([
+    { "$lookup": {                       
+        "from": "students",
+        "localField": "_id",
+        "foreignField": "enrolled_courses",
+        "as": "enrolled_students"
+    }},
+    { "$project": {
+        "course_code": 1,
+        "num_enrollments": { "$size": "$enrolled_students" }
+    }},
+    { "$sort": { "num_enrollments": -1 } },  
+    { "$limit": 10 }                         
+])

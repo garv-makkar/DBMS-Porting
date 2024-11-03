@@ -1,0 +1,7 @@
+filename,run_time
+./query_outputs_spark_optimized\query1_result,0.5189454555511475
+./query_outputs_spark_optimized\query2_result,0.21600723266601562
+./query_outputs_spark_optimized\query3_result,0.11481499671936035
+./query_outputs_spark_optimized\query4_result,0.10673213005065918
+./query_outputs_spark_optimized\query5_result,0.5658690929412842
+./query_outputs_spark_optimized\query6_result,0.16176605224609375
