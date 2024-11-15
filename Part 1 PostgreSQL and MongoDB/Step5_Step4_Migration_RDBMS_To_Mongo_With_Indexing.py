@@ -2,15 +2,15 @@ import psycopg2
 from pymongo import MongoClient
 
 # Database connection details for PostgreSQL
-pg_db_name = "university-db"
-pg_user = "postgres"  # Replace with your PostgreSQL username
-pg_password = "Garv10"  # Replace with your PostgreSQL password
-pg_host = "localhost"  # Host of the PostgreSQL server
-pg_port = "5432"  # Default PostgreSQL port
+pg_db_name = ""
+pg_user = ""  # Replace with your PostgreSQL username
+pg_password = ""  # Replace with your PostgreSQL password
+pg_host = ""  # Host of the PostgreSQL server
+pg_port = ""  # Default PostgreSQL port
 
-# MongoDB connection details
-mongo_client = MongoClient('mongodb://localhost:27017/')
-mongo_db = mongo_client["university_db_indexing"]
+# MongoDB connection details, add yours
+mongo_client = MongoClient('')
+mongo_db = mongo_client[""]
 
 # PostgreSQL Connection
 pg_conn = psycopg2.connect(
