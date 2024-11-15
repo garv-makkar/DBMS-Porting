@@ -2,11 +2,11 @@ import psycopg2
 from psycopg2 import sql
 
 # Database connection details
-db_name = "university-db"
-db_user = "postgres"  # Replace with your PostgreSQL username
-db_password = "Garv10"  # Replace with your PostgreSQL password
-db_host = "localhost"  # Host of the PostgreSQL server
-db_port = "5432"  # Default PostgreSQL port
+db_name = ""
+db_user = ""  # Replace with your PostgreSQL username
+db_password = ""  # Replace with your PostgreSQL password
+db_host = ""  # Host of the PostgreSQL server
+db_port = ""  # Default PostgreSQL port
 
 # Create tables with unique instructor-course assignments
 def create_tables():
